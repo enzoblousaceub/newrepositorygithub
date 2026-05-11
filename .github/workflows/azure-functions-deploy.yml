@@ -1,0 +1,50 @@
+# This workflow will build a .NET Core project and deploy it to an Azure Functions App on Windows or Linux when a commit is pushed to the main branch.
+#
+# To configure this workflow:
+# 1. Set up a secret in your repository named AZURE_FUNCTIONAPP_PUBLISH_PROFILE with your Azure Functions publish profile.
+# 2. Change the AZURE_FUNCTIONAPP_NAME environment variable below to your Azure Functions App name.
+#
+# For more information on:
+#   - GitHub Actions for Azure: https://github.com/Azure/Actions
+#   - Azure Service Principal for RBAC: https://github.com/Azure/functions-action#using-azure-service-principal-for-rbac-auth
+#   - Azure Functions Action: https://github.com/Azure/functions-action
+
+name: Deploy .NET Core app to Azure Functions App
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+env:
+  AZURE_FUNCTIONAPP_NAME: 'your-app-name'   # set this to your application's name
+  AZURE_FUNCTIONAPP_PACKAGE_PATH: './backend' # set this to the path to your web app project, defaults to the repository root
+  DOTNET_VERSION: '10.0.x'                   # set this to the dotnet version to use
+
+jobs:
+  build-and-deploy:
+    runs-on: windows-latest # or ubuntu-latest for Linux
+    steps:
+      - name: 'Checkout GitHub Action'
+        uses: actions/checkout@v4
+
+      - name: Setup DotNet ${{ env.DOTNET_VERSION }} Environment
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: 'Resolve Project Dependencies Using Dotnet'
+        shell: pwsh
+        run: |
+          pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
+          dotnet build --configuration Release --output ./output
+          popd
+
+      - name: 'Run Azure Functions Action'
+        uses: Azure/functions-action@v1
+        id: fa
+        with:
+          app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
+          package: '${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/output'
+          publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }}

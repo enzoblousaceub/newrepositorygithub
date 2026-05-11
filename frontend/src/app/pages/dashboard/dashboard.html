@@ -1,0 +1,99 @@
+<div class="dashboard-container">
+  <div class="page-header">
+    <h1>Dashboard</h1>
+    <p class="subtitle">Overview of your inventory</p>
+  </div>
+
+  <div class="stats-grid" *ngIf="stats && !loading">
+    <mat-card class="stat-card total-products" id="stat-total-products">
+      <mat-card-content>
+        <div class="stat-icon">
+          <mat-icon>inventory_2</mat-icon>
+        </div>
+        <div class="stat-info">
+          <span class="stat-value">{{ stats.totalProducts }}</span>
+          <span class="stat-label">Total Products</span>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card total-items" id="stat-total-items">
+      <mat-card-content>
+        <div class="stat-icon">
+          <mat-icon>widgets</mat-icon>
+        </div>
+        <div class="stat-info">
+          <span class="stat-value">{{ stats.totalItems | number }}</span>
+          <span class="stat-label">Total Items in Stock</span>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card total-value" id="stat-total-value">
+      <mat-card-content>
+        <div class="stat-icon">
+          <mat-icon>attach_money</mat-icon>
+        </div>
+        <div class="stat-info">
+          <span class="stat-value">{{ stats.totalValue | currency:'USD':'symbol':'1.2-2' }}</span>
+          <span class="stat-label">Total Inventory Value</span>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card categories" id="stat-categories">
+      <mat-card-content>
+        <div class="stat-icon">
+          <mat-icon>category</mat-icon>
+        </div>
+        <div class="stat-info">
+          <span class="stat-value">{{ stats.categories }}</span>
+          <span class="stat-label">Categories</span>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card low-stock" id="stat-low-stock">
+      <mat-card-content>
+        <div class="stat-icon warning">
+          <mat-icon>warning</mat-icon>
+        </div>
+        <div class="stat-info">
+          <span class="stat-value">{{ stats.lowStockCount }}</span>
+          <span class="stat-label">Low Stock Alerts</span>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card out-of-stock" id="stat-out-of-stock">
+      <mat-card-content>
+        <div class="stat-icon danger">
+          <mat-icon>error</mat-icon>
+        </div>
+        <div class="stat-info">
+          <span class="stat-value">{{ stats.outOfStockCount }}</span>
+          <span class="stat-label">Out of Stock</span>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div class="loading-container" *ngIf="loading">
+    <mat-icon class="spin">sync</mat-icon>
+    <p>Loading dashboard...</p>
+  </div>
+
+  <div class="quick-actions">
+    <h2>Quick Actions</h2>
+    <div class="actions-grid">
+      <a mat-raised-button color="primary" routerLink="/products/new" id="btn-add-product">
+        <mat-icon>add</mat-icon>
+        Add New Product
+      </a>
+      <a mat-stroked-button routerLink="/products" id="btn-view-products">
+        <mat-icon>list</mat-icon>
+        View All Products
+      </a>
+    </div>
+  </div>
+</div>

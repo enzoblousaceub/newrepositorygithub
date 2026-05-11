@@ -1,0 +1,86 @@
+<div class="form-container">
+  <div class="page-header">
+    <button mat-icon-button routerLink="/products" class="back-btn" id="btn-back">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <div class="header-text">
+      <h1>{{ pageTitle }}</h1>
+      <p class="subtitle">{{ isEditMode ? 'Update product information' : 'Add a new product to your inventory' }}</p>
+    </div>
+  </div>
+
+  <mat-card class="form-card">
+    <mat-card-content>
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" class="product-form">
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Product Name</mat-label>
+            <input matInput formControlName="name" placeholder="Enter product name" id="input-name">
+            <mat-icon matPrefix>inventory_2</mat-icon>
+            <mat-error *ngIf="form.get('name')?.hasError('required')">Name is required</mat-error>
+            <mat-error *ngIf="form.get('name')?.hasError('maxlength')">Max 200 characters</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Description</mat-label>
+            <textarea matInput formControlName="description" placeholder="Enter product description (optional)" rows="3" id="input-description"></textarea>
+            <mat-icon matPrefix>description</mat-icon>
+            <mat-error *ngIf="form.get('description')?.hasError('maxlength')">Max 500 characters</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Category</mat-label>
+            <input matInput formControlName="category" placeholder="Enter category (e.g. Electronics, Furniture)" id="input-category">
+            <mat-icon matPrefix>category</mat-icon>
+            <mat-error *ngIf="form.get('category')?.hasError('required')">Category is required</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row two-col">
+          <mat-form-field appearance="outline">
+            <mat-label>Quantity</mat-label>
+            <input matInput type="number" formControlName="quantity" placeholder="0" id="input-quantity">
+            <mat-icon matPrefix>widgets</mat-icon>
+            <mat-error *ngIf="form.get('quantity')?.hasError('required')">Required</mat-error>
+            <mat-error *ngIf="form.get('quantity')?.hasError('min')">Must be >= 0</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Price (USD)</mat-label>
+            <input matInput type="number" formControlName="price" placeholder="0.00" step="0.01" id="input-price">
+            <mat-icon matPrefix>attach_money</mat-icon>
+            <mat-error *ngIf="form.get('price')?.hasError('required')">Required</mat-error>
+            <mat-error *ngIf="form.get('price')?.hasError('min')">Must be >= 0</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="half-width">
+            <mat-label>Minimum Stock Level</mat-label>
+            <input matInput type="number" formControlName="minStock" placeholder="0" id="input-min-stock">
+            <mat-icon matPrefix>warning</mat-icon>
+            <mat-hint>Alert when quantity falls below this level</mat-hint>
+            <mat-error *ngIf="form.get('minStock')?.hasError('required')">Required</mat-error>
+            <mat-error *ngIf="form.get('minStock')?.hasError('min')">Must be >= 0</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-actions">
+          <button mat-stroked-button type="button" routerLink="/products" id="btn-cancel">
+            Cancel
+          </button>
+          <button mat-raised-button color="primary" type="submit" [disabled]="loading" id="btn-submit">
+            <mat-icon>{{ isEditMode ? 'save' : 'add' }}</mat-icon>
+            {{ isEditMode ? 'Update Product' : 'Create Product' }}
+          </button>
+        </div>
+
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>
