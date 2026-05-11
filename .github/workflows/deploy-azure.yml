@@ -33,8 +33,11 @@ jobs:
           cd frontend
           npm install
           npm run build -- --configuration production
-          echo "✅ Angular built to ../backend/wwwroot"
-          ls -la ../backend/wwwroot/   # Deve mostrar os arquivos
+          echo "✅ Angular build concluído"
+          echo "--- Conteúdo de frontend/dist ---"
+          ls -la dist/
+          echo "--- Conteúdo de backend/wwwroot (após build) ---"
+          ls -la ../backend/wwwroot/ || echo "Pasta ainda não criada"
       
       - name: Build & Publish .NET
         run: |
@@ -48,13 +51,15 @@ jobs:
           mkdir -p ./publish/backend/Data
           if [ -f "./backend/Data/stock.db" ]; then
             cp ./backend/Data/stock.db ./publish/backend/Data/
-            echo "✅ SQLite copied"
+            echo "✅ SQLite copiado"
           fi
       
-      - name: Verify wwwroot in publish
+      - name: Verificar arquivos finais
         run: |
-          echo "=== Conteúdo da pasta publish/backend/wwwroot ==="
-          ls -la ./publish/backend/wwwroot/ || echo "⚠️ Pasta wwwroot não encontrada no publish!"
+          echo "=== Conteúdo FINAL da pasta publish/backend ==="
+          ls -la ./publish/backend/
+          echo "=== Conteúdo de publish/backend/wwwroot (Angular) ==="
+          ls -la ./publish/backend/wwwroot/ || echo "WWWROOT NÃO ENCONTRADA!"
       
       - name: Deploy to Azure
         uses: azure/webapps-deploy@v2
