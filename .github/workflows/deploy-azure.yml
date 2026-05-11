@@ -1,4 +1,4 @@
-name: Deploy to Azure
+name: Deploy .NET + Angular to Azure
 
 on:
   push:
@@ -6,10 +6,13 @@ on:
   workflow_dispatch:
 
 env:
-  AZURE_WEBAPP_NAME: 'stockmanagerapi'   # 👈 NOME SEM O SUFIXO!
+  AZURE_WEBAPP_NAME: 'stockmanagerapi'
+  DOTNET_VERSION: '10.0.x'
+  DOTNET_QUALITY: 'daily'
+  NODE_VERSION: '20.x'
 
 jobs:
-  build-and-deploy:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -17,44 +20,35 @@ jobs:
       - name: Setup .NET 10
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '10.0.x'
-          dotnet-quality: 'daily'
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+          dotnet-quality: ${{ env.DOTNET_QUALITY }}
       
-      - name: Setup Node
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20.x
+          node-version: ${{ env.NODE_VERSION }}
       
-      - name: Build Backend
+      - name: Build Angular
+        run: |
+          cd frontend
+          npm install
+          npm run build -- --configuration production
+          echo "✅ Angular built"
+          ls -la ../backend/wwwroot/
+      
+      - name: Build & Publish .NET
         run: |
           cd backend
           dotnet restore
           dotnet build --configuration Release --no-restore
           dotnet publish -c Release -o ../publish/backend
       
-      - name: Build Frontend
-        run: |
-          cd frontend
-          npm install
-          npm run build -- --configuration production
-      
-      - name: Copy Angular to wwwroot
-        run: |
-          mkdir -p ./publish/backend/wwwroot
-          if [ -d "./backend/wwwroot" ]; then
-            cp -r ./backend/wwwroot/* ./publish/backend/wwwroot/
-          elif [ -d "./frontend/dist/frontend/browser" ]; then
-            cp -r ./frontend/dist/frontend/browser/* ./publish/backend/wwwroot/
-          elif [ -d "./frontend/dist/frontend" ]; then
-            cp -r ./frontend/dist/frontend/* ./publish/backend/wwwroot/
-          fi
-          ls -la ./publish/backend/wwwroot/
-      
       - name: Copy SQLite
         run: |
           mkdir -p ./publish/backend/Data
           if [ -f "./backend/Data/stock.db" ]; then
             cp ./backend/Data/stock.db ./publish/backend/Data/
+            echo "✅ SQLite copied"
           fi
       
       - name: Deploy to Azure
