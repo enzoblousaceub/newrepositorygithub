@@ -37,12 +37,32 @@ jobs:
           echo "--- Conteúdo de backend/wwwroot ---"
           ls -la ../backend/wwwroot/
       
-      - name: Build & Publish .NET
+      - name: Build .NET
         run: |
           cd backend
           dotnet restore
           dotnet build --configuration Release --no-restore
+      
+      - name: Publish .NET and copy Angular
+        run: |
+          # Publica o .NET
+          cd backend
           dotnet publish -c Release -o ../publish/backend
+          
+          # CRÍTICO: Copia os arquivos do Angular para a RAIZ do publish
+          if [ -d "./wwwroot" ]; then
+            mkdir -p ../publish/backend/wwwroot
+            cp -r ./wwwroot/* ../publish/backend/wwwroot/
+            echo "✅ Angular copied from backend/wwwroot"
+          elif [ -d "./angular-dist" ]; then
+            cp -r ./angular-dist/* ../publish/backend/
+          fi
+          
+          # Verificar se o index.html existe no publish
+          echo "=== Verificando publish/backend ==="
+          ls -la ../publish/backend/
+          echo "=== Verificando publish/backend/wwwroot ==="
+          ls -la ../publish/backend/wwwroot/ || echo "wwwroot não existe ainda"
       
       - name: Copy SQLite
         run: |
@@ -52,12 +72,23 @@ jobs:
             echo "✅ SQLite copiado"
           fi
       
-      - name: Verificar arquivos finais
+      - name: Final verification
         run: |
-          echo "=== Conteúdo da pasta publish/backend ==="
+          echo "=== Conteúdo FINAL que será enviado ao Azure ==="
+          echo "--- Raiz do publish ---"
           ls -la ./publish/backend/
-          echo "=== Conteúdo de publish/backend/wwwroot (Angular) ==="
-          ls -la ./publish/backend/wwwroot/ || echo "WWWROOT NÃO ENCONTRADA!"
+          echo "--- Pasta wwwroot (Angular) ---"
+          ls -la ./publish/backend/wwwroot/ || echo "⚠️ WWWROOT NÃO ENCONTRADA!"
+          
+          # Se o index.html estiver na raiz, não em wwwroot
+          if [ -f "./publish/backend/index.html" ]; then
+            echo "✅ index.html está na RAIZ do publish!"
+          elif [ -f "./publish/backend/wwwroot/index.html" ]; then
+            echo "✅ index.html está em wwwroot"
+          else
+            echo "❌ index.html NÃO ENCONTRADO!"
+            exit 1
+          fi
       
       - name: Deploy to Azure
         uses: azure/webapps-deploy@v2
