@@ -5,6 +5,9 @@ on:
     branches: [ main, master ]
   workflow_dispatch:
 
+env:
+  AZURE_WEBAPP_NAME: 'stockmanagerapi-ccddf0bxg7g2b6am'
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -21,24 +24,31 @@ jobs:
         with:
           node-version: 20.x
       
-      - name: Build Backend
-        run: |
-          cd backend
-          dotnet restore
-          dotnet build --configuration Release
-          dotnet publish -c Release -o ../publish/backend
-      
       - name: Build Frontend
         run: |
           cd frontend
           npm install
           npm run build -- --configuration production
-          mkdir -p ../publish/backend/wwwroot
-          cp -r dist/* ../publish/backend/wwwroot/
+      
+      - name: Publish Backend (with wwwroot)
+        run: |
+          cd backend
+          dotnet restore
+          dotnet build --configuration Release
+          dotnet publish -c Release -o ../publish/backend
+          # O Angular já está em backend/wwwroot, copia para publish
+          cp -r wwwroot ../publish/backend/
+      
+      - name: Copy SQLite
+        run: |
+          mkdir -p ./publish/backend/Data
+          if [ -f "./backend/Data/stock.db" ]; then
+            cp ./backend/Data/stock.db ./publish/backend/Data/
+          fi
       
       - name: Deploy to Azure
         uses: azure/webapps-deploy@v2
         with:
-          app-name: stockmanagerapi-ccddf0bxg7g2b6am
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
           package: ./publish/backend
