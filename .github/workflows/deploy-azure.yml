@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 env:
-  AZURE_WEBAPP_NAME: 'stockmanagerapi-ccddf0bxg7g2b6am'
+  AZURE_WEBAPP_NAME: 'stockmanagerapi'
 
 jobs:
   build-and-deploy:
