@@ -7,8 +7,6 @@ on:
 
 env:
   AZURE_WEBAPP_NAME: 'stockmanagerapi-ccddf0bxg7g2b6am'
-  DOTNET_VERSION: '10.0.x'
-  DOTNET_QUALITY: 'daily'
 
 jobs:
   build-and-deploy:
@@ -19,30 +17,28 @@ jobs:
       - name: Setup .NET 10
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: ${{ env.DOTNET_VERSION }}
-          dotnet-quality: ${{ env.DOTNET_QUALITY }}
+          dotnet-version: '10.0.x'
+          dotnet-quality: 'daily'
       
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 20.x
       
-      - name: Build Backend
-        run: |
-          cd backend
-          dotnet restore
-          dotnet build --configuration Release --no-restore
-          dotnet publish -c Release -o ../publish/backend
-      
-      - name: Build Frontend
+      - name: Build Frontend (Angular)
         run: |
           cd frontend
           npm install
           npm run build -- --configuration production
-          mkdir -p ../publish/backend/wwwroot
-          cp -r dist/frontend/browser/* ../publish/backend/wwwroot/ 2>/dev/null || \
-          cp -r dist/frontend/* ../publish/backend/wwwroot/ 2>/dev/null || \
-          cp -r dist/* ../publish/backend/wwwroot/
+          # Angular vai para backend/wwwroot automaticamente
+      
+      - name: Build & Publish Backend
+        run: |
+          cd backend
+          dotnet restore
+          dotnet build --configuration Release --no-restore
+          # Publica incluindo a pasta wwwroot (que tem o Angular)
+          dotnet publish -c Release -o ../publish/backend
       
       - name: Copy SQLite
         run: |
