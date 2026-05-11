@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 env:
-  AZURE_WEBAPP_NAME: 'stockmanagerapi-ccddf0bxg7g2b6am'
+  AZURE_WEBAPP_NAME: 'stockmanagerapi'   # 👈 NOME SEM O SUFIXO!
 
 jobs:
   build-and-deploy:
@@ -43,24 +43,18 @@ jobs:
           mkdir -p ./publish/backend/wwwroot
           if [ -d "./backend/wwwroot" ]; then
             cp -r ./backend/wwwroot/* ./publish/backend/wwwroot/
-            echo "✅ Angular copied"
           elif [ -d "./frontend/dist/frontend/browser" ]; then
             cp -r ./frontend/dist/frontend/browser/* ./publish/backend/wwwroot/
-            echo "✅ Angular copied from dist"
           elif [ -d "./frontend/dist/frontend" ]; then
             cp -r ./frontend/dist/frontend/* ./publish/backend/wwwroot/
-            echo "✅ Angular copied from dist/frontend"
-          else
-            echo "⚠️ Angular build not found"
-            ls -la ./frontend/dist/
           fi
+          ls -la ./publish/backend/wwwroot/
       
       - name: Copy SQLite
         run: |
           mkdir -p ./publish/backend/Data
           if [ -f "./backend/Data/stock.db" ]; then
             cp ./backend/Data/stock.db ./publish/backend/Data/
-            echo "✅ SQLite copied"
           fi
       
       - name: Deploy to Azure
