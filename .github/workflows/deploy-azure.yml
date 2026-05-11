@@ -33,8 +33,8 @@ jobs:
           cd frontend
           npm install
           npm run build -- --configuration production
-          echo "✅ Angular built"
-          ls -la ../backend/wwwroot/
+          echo "✅ Angular built to ../backend/wwwroot"
+          ls -la ../backend/wwwroot/   # Deve mostrar os arquivos
       
       - name: Build & Publish .NET
         run: |
@@ -50,6 +50,11 @@ jobs:
             cp ./backend/Data/stock.db ./publish/backend/Data/
             echo "✅ SQLite copied"
           fi
+      
+      - name: Verify wwwroot in publish
+        run: |
+          echo "=== Conteúdo da pasta publish/backend/wwwroot ==="
+          ls -la ./publish/backend/wwwroot/ || echo "⚠️ Pasta wwwroot não encontrada no publish!"
       
       - name: Deploy to Azure
         uses: azure/webapps-deploy@v2
