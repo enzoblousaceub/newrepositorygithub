@@ -28,24 +28,16 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-// 1. Servir arquivos estáticos do Angular (IMPORTANTE: colocar ANTES de outros middlewares)
-app.UseDefaultFiles();  // index.html como padrão
-app.UseStaticFiles();   // arquivos CSS, JS, etc.
-
-// 2. Configure CORS
-app.UseCors("AllowAll");
-
-// 3. Middlewares padrão
+// Configure pipeline
+app.UseDefaultFiles();
+app.UseStaticFiles();
 app.UseHttpsRedirection();
+app.UseCors("AllowAll");
 app.UseAuthorization();
-
-// 4. Mapear controllers da API
 app.MapControllers();
-
-// 5. Fallback para o Angular (rotas como /dashboard)
 app.MapFallbackToFile("index.html");
 
-// Auto-create database and apply seed data
+// Ensure database is created
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
