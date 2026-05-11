@@ -36,6 +36,8 @@ jobs:
           echo "✅ Angular build concluído"
           echo "--- Conteúdo de backend/wwwroot ---"
           ls -la ../backend/wwwroot/
+          echo "--- Conteúdo de backend/wwwroot/browser ---"
+          ls -la ../backend/wwwroot/browser/
       
       - name: Build .NET
         run: |
@@ -45,24 +47,32 @@ jobs:
       
       - name: Publish .NET and copy Angular
         run: |
-          # Publica o .NET
           cd backend
           dotnet publish -c Release -o ../publish/backend
           
-          # CRÍTICO: Copia os arquivos do Angular para a RAIZ do publish
-          if [ -d "./wwwroot" ]; then
+          # Copiar Angular da pasta browser (onde ele realmente está)
+          if [ -d "./wwwroot/browser" ]; then
+            mkdir -p ../publish/backend/wwwroot
+            cp -r ./wwwroot/browser/* ../publish/backend/wwwroot/
+            echo "✅ Angular copied from wwwroot/browser"
+          elif [ -d "./wwwroot" ]; then
             mkdir -p ../publish/backend/wwwroot
             cp -r ./wwwroot/* ../publish/backend/wwwroot/
-            echo "✅ Angular copied from backend/wwwroot"
-          elif [ -d "./angular-dist" ]; then
-            cp -r ./angular-dist/* ../publish/backend/
+            echo "✅ Angular copied from wwwroot"
+          else
+            echo "❌ Nenhum build do Angular encontrado!"
+            exit 1
           fi
           
-          # Verificar se o index.html existe no publish
-          echo "=== Verificando publish/backend ==="
-          ls -la ../publish/backend/
+          # Verificação
           echo "=== Verificando publish/backend/wwwroot ==="
-          ls -la ../publish/backend/wwwroot/ || echo "wwwroot não existe ainda"
+          ls -la ../publish/backend/wwwroot/
+          if [ -f "../publish/backend/wwwroot/index.html" ]; then
+            echo "✅ index.html está no lugar certo!"
+          else
+            echo "❌ index.html NÃO ENCONTRADO!"
+            exit 1
+          fi
       
       - name: Copy SQLite
         run: |
@@ -70,24 +80,6 @@ jobs:
           if [ -f "./backend/Data/stock.db" ]; then
             cp ./backend/Data/stock.db ./publish/backend/Data/
             echo "✅ SQLite copiado"
-          fi
-      
-      - name: Final verification
-        run: |
-          echo "=== Conteúdo FINAL que será enviado ao Azure ==="
-          echo "--- Raiz do publish ---"
-          ls -la ./publish/backend/
-          echo "--- Pasta wwwroot (Angular) ---"
-          ls -la ./publish/backend/wwwroot/ || echo "⚠️ WWWROOT NÃO ENCONTRADA!"
-          
-          # Se o index.html estiver na raiz, não em wwwroot
-          if [ -f "./publish/backend/index.html" ]; then
-            echo "✅ index.html está na RAIZ do publish!"
-          elif [ -f "./publish/backend/wwwroot/index.html" ]; then
-            echo "✅ index.html está em wwwroot"
-          else
-            echo "❌ index.html NÃO ENCONTRADO!"
-            exit 1
           fi
       
       - name: Deploy to Azure
