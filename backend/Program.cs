@@ -6,35 +6,50 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
-// Configure SQLite database path
-var dataDir = Path.Combine(Directory.GetCurrentDirectory(), "Data");
-Directory.CreateDirectory(dataDir);
-var dbPath = Path.Combine(dataDir, "stock.db");
+// SQLite configuration - AZURE COMPATIBLE
+var dbPath = Path.Combine(Directory.GetCurrentDirectory(), "Data", "stock.db");
+var dataDir = Path.GetDirectoryName(dbPath);
+if (!Directory.Exists(dataDir)) Directory.CreateDirectory(dataDir);
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite($"Data Source={dbPath}"));
 
-// Configure CORS
+// CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", policy =>
     {
         policy.AllowAnyOrigin()
-              .AllowAnyHeader()
-              .AllowAnyMethod();
+              .AllowAnyMethod()
+              .AllowAnyHeader();
     });
+});
+
+// CRITICAL: Configure Kestrel for Azure
+builder.WebHost.ConfigureKestrel(serverOptions =>
+{
+    serverOptions.ListenAnyIP(8080); // Azure expects port 8080
 });
 
 var app = builder.Build();
 
 // Configure pipeline
-app.UseDefaultFiles();
-app.UseStaticFiles();
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
 app.UseHttpsRedirection();
 app.UseCors("AllowAll");
 app.UseAuthorization();
 app.MapControllers();
+
+// Serve Angular static files
+app.UseDefaultFiles();
+app.UseStaticFiles();
 app.MapFallbackToFile("index.html");
 
 // Ensure database is created
