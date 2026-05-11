@@ -7,9 +7,10 @@ import { Product, CreateProduct, UpdateProduct, DashboardStats } from '../models
   providedIn: 'root'
 })
 export class ProductService {
-  private readonly apiUrl = 'http://localhost:5005/api/products';
+  // 🔥 MUDE PARA URL RELATIVA (funciona em qualquer ambiente)
+  private readonly apiUrl = '/api/products';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   getProducts(search?: string, category?: string): Observable<Product[]> {
     let params = new HttpParams();
