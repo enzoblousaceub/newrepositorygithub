@@ -6,12 +6,11 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 
 // SQLite configuration - AZURE COMPATIBLE
 var dbPath = Path.Combine(Directory.GetCurrentDirectory(), "Data", "stock.db");
 var dataDir = Path.GetDirectoryName(dbPath);
-if (!Directory.Exists(dataDir)) Directory.CreateDirectory(dataDir);
+if (!Directory.Exists(dataDir)) Directory.CreateDirectory(dataDir!);
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite($"Data Source={dbPath}"));
@@ -36,12 +35,6 @@ builder.WebHost.ConfigureKestrel(serverOptions =>
 var app = builder.Build();
 
 // Configure pipeline
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-
 app.UseHttpsRedirection();
 app.UseCors("AllowAll");
 app.UseAuthorization();
