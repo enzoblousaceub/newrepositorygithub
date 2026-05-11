@@ -1,0 +1,44 @@
+name: Deploy to Azure
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+      
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+      
+      - name: Build Backend
+        run: |
+          cd backend
+          dotnet restore
+          dotnet build --configuration Release
+          dotnet publish -c Release -o ../publish/backend
+      
+      - name: Build Frontend
+        run: |
+          cd frontend
+          npm install
+          npm run build -- --configuration production
+          mkdir -p ../publish/backend/wwwroot
+          cp -r dist/* ../publish/backend/wwwroot/
+      
+      - name: Deploy to Azure
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: stockmanagerapi-ccddf0bxg7g2b6am
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: ./publish/backend
