@@ -57,6 +57,28 @@ jobs:
           cd ./frontend
           npm run build -- --configuration production
       
+      - name: Copy Angular to wwwroot
+        run: |
+          # Criar pasta wwwroot
+          mkdir -p ./publish/backend/wwwroot
+          
+          # Encontrar e copiar os arquivos do Angular
+          if [ -d "./frontend/dist/frontend/browser" ]; then
+            cp -r ./frontend/dist/frontend/browser/* ./publish/backend/wwwroot/
+            echo "✅ Copied from dist/frontend/browser"
+          elif [ -d "./frontend/dist/frontend" ]; then
+            cp -r ./frontend/dist/frontend/* ./publish/backend/wwwroot/
+            echo "✅ Copied from dist/frontend"
+          elif [ -d "./frontend/dist" ]; then
+            cp -r ./frontend/dist/* ./publish/backend/wwwroot/
+            echo "✅ Copied from dist"
+          else
+            echo "⚠️ No Angular build found"
+          fi
+          
+          # Verificar o que foi copiado
+          ls -la ./publish/backend/wwwroot/
+      
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
