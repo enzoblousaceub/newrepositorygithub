@@ -25,26 +25,42 @@ jobs:
         with:
           node-version: 20.x
       
-      - name: Build Frontend (Angular)
-        run: |
-          cd frontend
-          npm install
-          npm run build -- --configuration production
-          # Angular vai para backend/wwwroot automaticamente
-      
-      - name: Build & Publish Backend
+      - name: Build Backend
         run: |
           cd backend
           dotnet restore
           dotnet build --configuration Release --no-restore
-          # Publica incluindo a pasta wwwroot (que tem o Angular)
           dotnet publish -c Release -o ../publish/backend
+      
+      - name: Build Frontend
+        run: |
+          cd frontend
+          npm install
+          npm run build -- --configuration production
+      
+      - name: Copy Angular to wwwroot
+        run: |
+          mkdir -p ./publish/backend/wwwroot
+          if [ -d "./backend/wwwroot" ]; then
+            cp -r ./backend/wwwroot/* ./publish/backend/wwwroot/
+            echo "✅ Angular copied"
+          elif [ -d "./frontend/dist/frontend/browser" ]; then
+            cp -r ./frontend/dist/frontend/browser/* ./publish/backend/wwwroot/
+            echo "✅ Angular copied from dist"
+          elif [ -d "./frontend/dist/frontend" ]; then
+            cp -r ./frontend/dist/frontend/* ./publish/backend/wwwroot/
+            echo "✅ Angular copied from dist/frontend"
+          else
+            echo "⚠️ Angular build not found"
+            ls -la ./frontend/dist/
+          fi
       
       - name: Copy SQLite
         run: |
           mkdir -p ./publish/backend/Data
           if [ -f "./backend/Data/stock.db" ]; then
             cp ./backend/Data/stock.db ./publish/backend/Data/
+            echo "✅ SQLite copied"
           fi
       
       - name: Deploy to Azure
