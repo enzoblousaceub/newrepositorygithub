@@ -1,6 +1,6 @@
 .form-container {
   padding: 24px;
-  max-width: 800px;
+  max-width: 1000px;
   margin: 0 auto;
 }
 
@@ -19,7 +19,7 @@
       font-size: 2rem;
       font-weight: 600;
       margin: 0 0 4px 0;
-      background: linear-gradient(135deg, #60a5fa, #a78bfa);
+      background: linear-gradient(135deg, #3b82f6, #cbd5e1);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
@@ -41,10 +41,120 @@
   }
 }
 
+.form-layout-grid {
+  display: grid;
+  grid-template-columns: 360px minmax(0, 1fr);
+  gap: 32px;
+}
+
+.product-preview-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  border-right: 1px solid rgba(148, 163, 184, 0.1);
+  padding-right: 32px;
+
+  .preview-title {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.4);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .preview-card {
+    background: rgba(15, 23, 42, 0.25);
+    border: 1px solid rgba(148, 163, 184, 0.08);
+    border-radius: 16px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+    .image-wrapper {
+      width: 100%;
+      height: 320px;
+      overflow: hidden;
+      background: rgba(0, 0, 0, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.08);
+
+      .preview-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+      }
+    }
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+
+      .preview-image {
+        transform: scale(1.05);
+      }
+    }
+
+    .preview-info {
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+
+      .preview-name {
+        font-size: 1rem;
+        font-weight: 700;
+        color: #ffffff;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .preview-category {
+        font-size: 0.75rem;
+        color: #3b82f6;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .preview-price {
+        font-size: 1.15rem;
+        font-weight: 800;
+        color: #f8fafc;
+        margin-top: 4px;
+      }
+    }
+  }
+}
+
 .product-form {
   display: flex;
   flex-direction: column;
   gap: 8px;
+}
+
+@media (max-width: 960px) {
+  .form-layout-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .product-preview-panel {
+    border-right: none;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+    padding-right: 0;
+    padding-bottom: 24px;
+
+    .preview-card {
+      max-width: 360px;
+      margin: 0 auto;
+    }
+  }
 }
 
 .form-row {

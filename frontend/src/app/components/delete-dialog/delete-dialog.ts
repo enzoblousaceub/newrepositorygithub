@@ -13,16 +13,16 @@ import { MatIconModule } from '@angular/material/icon';
       <div class="dialog-icon">
         <mat-icon>warning</mat-icon>
       </div>
-      <h2 mat-dialog-title>Delete Product</h2>
+      <h2 mat-dialog-title>Excluir Produto</h2>
       <mat-dialog-content>
-        <p>Are you sure you want to delete <strong>"{{ data.name }}"</strong>?</p>
-        <p class="warning-text">This action cannot be undone.</p>
+        <p>Tem certeza de que deseja excluir <strong>"{{ data.name }}"</strong>?</p>
+        <p class="warning-text">Esta ação não poderá ser desfeita.</p>
       </mat-dialog-content>
       <mat-dialog-actions align="end">
-        <button mat-stroked-button (click)="onCancel()" id="btn-dialog-cancel">Cancel</button>
+        <button mat-stroked-button (click)="onCancel()" id="btn-dialog-cancel">Cancelar</button>
         <button mat-raised-button color="warn" (click)="onConfirm()" id="btn-dialog-confirm">
           <mat-icon>delete</mat-icon>
-          Delete
+          Excluir
         </button>
       </mat-dialog-actions>
     </div>

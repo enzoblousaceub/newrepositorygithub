@@ -8,10 +8,11 @@
   position: sticky;
   top: 0;
   z-index: 1000;
-  background: rgba(18, 18, 24, 0.85) !important;
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(15, 23, 42, 0.8) !important;
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(148, 163, 184, 0.1);
   padding: 0 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.25);
 }
 
 .toolbar-brand {
@@ -19,22 +20,35 @@
   align-items: center;
   gap: 10px;
   margin-left: 8px;
+  cursor: pointer;
 
-  .brand-icon {
-    color: #60a5fa;
-    font-size: 28px;
-    width: 28px;
-    height: 28px;
+  .brand-logo {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+    border-radius: 6px;
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   }
 
   .brand-name {
-    font-size: 1.25rem;
-    font-weight: 700;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 1.3rem;
+    font-weight: 800;
     letter-spacing: -0.5px;
-    background: linear-gradient(135deg, #60a5fa, #a78bfa);
+    background: linear-gradient(135deg, #3b82f6 0%, #ffffff 50%, #94a3b8 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    transition: filter 0.3s ease;
+  }
+
+  &:hover {
+    .brand-logo {
+      transform: rotate(15deg) scale(1.15);
+    }
+    .brand-name {
+      filter: brightness(1.1) drop-shadow(0 0 8px rgba(59, 130, 246, 0.35));
+    }
   }
 }
 
@@ -43,24 +57,60 @@
 }
 
 .app-sidenav {
-  width: 240px;
-  background: rgba(18, 18, 24, 0.6) !important;
-  border-right: 1px solid rgba(255, 255, 255, 0.06) !important;
+  width: 260px;
+  background: rgba(15, 23, 42, 0.45) !important;
+  border-right: 1px solid rgba(148, 163, 184, 0.08) !important;
+  backdrop-filter: blur(20px);
 
   mat-nav-list {
-    padding-top: 8px;
+    padding: 16px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  a {
+    border-radius: 12px !important;
+    margin: 0 !important;
+    padding: 0 16px !important;
+    height: 48px !important;
+    color: rgba(255, 255, 255, 0.7) !important;
+    display: flex;
+    align-items: center;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+
+    mat-icon {
+      margin-right: 12px;
+      color: rgba(148, 163, 184, 0.7);
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+
+    &:hover:not(.active) {
+      background: rgba(255, 255, 255, 0.04) !important;
+      color: #fff !important;
+      transform: translateX(4px);
+
+      mat-icon {
+        color: #3b82f6;
+        transform: scale(1.1);
+      }
+    }
   }
 
   a.active {
-    background: rgba(96, 165, 250, 0.1) !important;
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(148, 163, 184, 0.05)) !important;
+    border: 1px solid rgba(59, 130, 246, 0.25) !important;
+    box-shadow: 0 4px 20px rgba(59, 130, 246, 0.12);
 
     mat-icon {
-      color: #60a5fa;
+      color: #3b82f6;
+      transform: scale(1.05);
     }
 
     span {
-      color: #60a5fa;
-      font-weight: 500;
+      color: #fff !important;
+      font-weight: 600 !important;
+      letter-spacing: 0.2px;
     }
   }
 }
@@ -72,6 +122,6 @@
 
 @media (max-width: 768px) {
   .app-sidenav {
-    width: 200px;
+    width: 220px;
   }
 }

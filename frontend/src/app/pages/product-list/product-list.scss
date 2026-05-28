@@ -17,7 +17,7 @@
       font-size: 2rem;
       font-weight: 600;
       margin: 0 0 4px 0;
-      background: linear-gradient(135deg, #60a5fa, #a78bfa);
+      background: linear-gradient(135deg, #3b82f6, #cbd5e1);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
@@ -79,11 +79,26 @@
   width: 100%;
 }
 
+.product-name-cell-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 0;
+}
+
+.product-thumbnail {
+  width: 88px;
+  height: 88px;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(15, 23, 42, 0.4);
+}
+
 .product-name-cell {
   display: flex;
   flex-direction: column;
   gap: 2px;
-  padding: 8px 0;
 
   .product-name {
     font-weight: 500;

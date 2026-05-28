@@ -41,9 +41,28 @@ app.UseAuthorization();
 app.MapControllers();
 
 // Serve Angular static files
-app.UseDefaultFiles();
-app.UseStaticFiles();
-app.MapFallbackToFile("index.html");
+var browserPath = Path.Combine(builder.Environment.ContentRootPath, "wwwroot", "browser");
+if (Directory.Exists(browserPath))
+{
+    app.UseDefaultFiles(new DefaultFilesOptions
+    {
+        FileProvider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(browserPath)
+    });
+    app.UseStaticFiles(new StaticFileOptions
+    {
+        FileProvider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(browserPath)
+    });
+    app.MapFallbackToFile("index.html", new StaticFileOptions
+    {
+        FileProvider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(browserPath)
+    });
+}
+else
+{
+    app.UseDefaultFiles();
+    app.UseStaticFiles();
+    app.MapFallbackToFile("index.html");
+}
 
 // Ensure database is created
 using (var scope = app.Services.CreateScope())

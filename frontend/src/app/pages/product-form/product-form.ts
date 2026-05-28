@@ -29,7 +29,7 @@ export class ProductFormComponent implements OnInit {
   productId: number | null = null;
   loading = false;
   categories: string[] = [];
-  pageTitle = 'New Product';
+  pageTitle = 'Novo Produto';
 
   constructor(
     private fb: FormBuilder,
@@ -55,7 +55,7 @@ export class ProductFormComponent implements OnInit {
     if (id) {
       this.isEditMode = true;
       this.productId = +id;
-      this.pageTitle = 'Edit Product';
+      this.pageTitle = 'Editar Produto';
       this.loadProduct(this.productId);
     }
   }
@@ -75,7 +75,7 @@ export class ProductFormComponent implements OnInit {
         this.loading = false;
       },
       error: () => {
-        this.snackBar.open('Product not found', 'Close', { duration: 3000 });
+        this.snackBar.open('Produto não encontrado', 'Fechar', { duration: 3000 });
         this.router.navigate(['/products']);
       }
     });
@@ -99,22 +99,22 @@ export class ProductFormComponent implements OnInit {
     if (this.isEditMode && this.productId) {
       this.productService.updateProduct(this.productId, data).subscribe({
         next: () => {
-          this.snackBar.open('Product updated successfully', 'Close', { duration: 3000 });
+          this.snackBar.open('Produto atualizado com sucesso', 'Fechar', { duration: 3000 });
           this.router.navigate(['/products']);
         },
         error: () => {
-          this.snackBar.open('Failed to update product', 'Close', { duration: 3000 });
+          this.snackBar.open('Falha ao atualizar produto', 'Fechar', { duration: 3000 });
           this.loading = false;
         }
       });
     } else {
       this.productService.createProduct(data).subscribe({
         next: () => {
-          this.snackBar.open('Product created successfully', 'Close', { duration: 3000 });
+          this.snackBar.open('Produto criado com sucesso', 'Fechar', { duration: 3000 });
           this.router.navigate(['/products']);
         },
         error: () => {
-          this.snackBar.open('Failed to create product', 'Close', { duration: 3000 });
+          this.snackBar.open('Falha ao criar produto', 'Fechar', { duration: 3000 });
           this.loading = false;
         }
       });

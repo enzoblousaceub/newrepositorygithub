@@ -11,7 +11,7 @@
     font-size: 2rem;
     font-weight: 600;
     margin: 0 0 4px 0;
-    background: linear-gradient(135deg, #60a5fa, #a78bfa);
+    background: linear-gradient(135deg, #3b82f6, #cbd5e1);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -97,23 +97,23 @@
 }
 
 .stat-card.total-products .stat-icon {
-  background: rgba(96, 165, 250, 0.15);
-  mat-icon { color: #60a5fa; }
+  background: rgba(59, 130, 246, 0.15);
+  mat-icon { color: #3b82f6; }
 }
 
 .stat-card.total-items .stat-icon {
-  background: rgba(52, 211, 153, 0.15);
-  mat-icon { color: #34d399; }
+  background: rgba(148, 163, 184, 0.15);
+  mat-icon { color: #cbd5e1; }
 }
 
 .stat-card.total-value .stat-icon {
-  background: rgba(167, 139, 250, 0.15);
-  mat-icon { color: #a78bfa; }
+  background: rgba(255, 255, 255, 0.12);
+  mat-icon { color: #ffffff; }
 }
 
 .stat-card.categories .stat-icon {
-  background: rgba(251, 146, 60, 0.15);
-  mat-icon { color: #fb923c; }
+  background: rgba(71, 85, 105, 0.2);
+  mat-icon { color: #94a3b8; }
 }
 
 .loading-container {

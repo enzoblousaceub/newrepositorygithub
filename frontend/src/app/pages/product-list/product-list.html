@@ -1,12 +1,12 @@
 <div class="product-list-container">
   <div class="page-header">
     <div class="header-text">
-      <h1>Products</h1>
-      <p class="subtitle">Manage your inventory items</p>
+      <h1>Produtos</h1>
+      <p class="subtitle">Gerencie os itens do seu estoque</p>
     </div>
     <a mat-raised-button color="primary" routerLink="/products/new" id="btn-new-product">
       <mat-icon>add</mat-icon>
-      New Product
+      Novo Produto
     </a>
   </div>
 
@@ -14,22 +14,22 @@
     <mat-card-content>
       <div class="filters-row">
         <mat-form-field appearance="outline" class="search-field">
-          <mat-label>Search products</mat-label>
-          <input matInput [(ngModel)]="searchQuery" (keyup.enter)="onSearch()" placeholder="Search by name or description..." id="input-search">
+          <mat-label>Pesquisar produtos</mat-label>
+          <input matInput [(ngModel)]="searchQuery" (keyup.enter)="onSearch()" placeholder="Pesquisar por nome ou descrição..." id="input-search">
           <mat-icon matSuffix>search</mat-icon>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="category-field">
-          <mat-label>Category</mat-label>
+          <mat-label>Categoria</mat-label>
           <mat-select [(ngModel)]="selectedCategory" (selectionChange)="onCategoryChange()" id="select-category">
-            <mat-option value="">All Categories</mat-option>
+            <mat-option value="">Todas as Categorias</mat-option>
             <mat-option *ngFor="let cat of categories" [value]="cat">{{ cat }}</mat-option>
           </mat-select>
         </mat-form-field>
 
         <button mat-stroked-button (click)="clearFilters()" class="clear-btn" id="btn-clear-filters">
           <mat-icon>clear</mat-icon>
-          Clear
+          Limpar
         </button>
       </div>
     </mat-card-content>
@@ -40,30 +40,36 @@
       <table mat-table [dataSource]="dataSource" matSort class="product-table">
 
         <ng-container matColumnDef="name">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Product Name</th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Nome do Produto</th>
           <td mat-cell *matCellDef="let product">
-            <div class="product-name-cell">
-              <span class="product-name">{{ product.name }}</span>
-              <span class="product-desc" *ngIf="product.description">{{ product.description }}</span>
+            <div class="product-name-cell-wrapper">
+              <img [src]="'images/' + product.id + '.png'" 
+                   onerror="this.src='images/placeholder.png'" 
+                   class="product-thumbnail" 
+                   alt="Imagem do Produto" />
+              <div class="product-name-cell">
+                <span class="product-name">{{ product.name }}</span>
+                <span class="product-desc" *ngIf="product.description">{{ product.description }}</span>
+              </div>
             </div>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="category">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Category</th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Categoria</th>
           <td mat-cell *matCellDef="let product">
             <span class="category-chip">{{ product.category }}</span>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="quantity">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Quantity</th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Quantidade</th>
           <td mat-cell *matCellDef="let product">{{ product.quantity | number }}</td>
         </ng-container>
 
         <ng-container matColumnDef="price">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Price</th>
-          <td mat-cell *matCellDef="let product">{{ product.price | currency:'USD':'symbol':'1.2-2' }}</td>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Preço</th>
+          <td mat-cell *matCellDef="let product">{{ product.price | currency:'BRL':'symbol':'1.2-2' }}</td>
         </ng-container>
 
         <ng-container matColumnDef="status">
@@ -76,13 +82,13 @@
         </ng-container>
 
         <ng-container matColumnDef="actions">
-          <th mat-header-cell *matHeaderCellDef>Actions</th>
+          <th mat-header-cell *matHeaderCellDef>Ações</th>
           <td mat-cell *matCellDef="let product">
             <div class="actions-cell">
-              <a mat-icon-button [routerLink]="['/products', product.id, 'edit']" matTooltip="Edit" color="primary">
+              <a mat-icon-button [routerLink]="['/products', product.id, 'edit']" matTooltip="Editar" color="primary">
                 <mat-icon>edit</mat-icon>
               </a>
-              <button mat-icon-button (click)="confirmDelete(product)" matTooltip="Delete" color="warn">
+              <button mat-icon-button (click)="confirmDelete(product)" matTooltip="Excluir" color="warn">
                 <mat-icon>delete</mat-icon>
               </button>
             </div>
@@ -96,7 +102,7 @@
           <td class="mat-cell" [attr.colspan]="displayedColumns.length">
             <div class="empty-state">
               <mat-icon>inventory</mat-icon>
-              <p>No products found</p>
+              <p>Nenhum produto encontrado</p>
             </div>
           </td>
         </tr>
