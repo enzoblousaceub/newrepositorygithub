@@ -42,6 +42,9 @@ app.MapControllers();
 
 // Serve Angular static files
 var browserPath = Path.Combine(builder.Environment.ContentRootPath, "wwwroot", "browser");
+var provider = new Microsoft.AspNetCore.StaticFiles.FileExtensionContentTypeProvider();
+provider.Mappings[".webmanifest"] = "application/manifest+json";
+
 if (Directory.Exists(browserPath))
 {
     app.UseDefaultFiles(new DefaultFilesOptions
@@ -50,17 +53,22 @@ if (Directory.Exists(browserPath))
     });
     app.UseStaticFiles(new StaticFileOptions
     {
-        FileProvider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(browserPath)
+        FileProvider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(browserPath),
+        ContentTypeProvider = provider
     });
     app.MapFallbackToFile("index.html", new StaticFileOptions
     {
-        FileProvider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(browserPath)
+        FileProvider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(browserPath),
+        ContentTypeProvider = provider
     });
 }
 else
 {
     app.UseDefaultFiles();
-    app.UseStaticFiles();
+    app.UseStaticFiles(new StaticFileOptions
+    {
+        ContentTypeProvider = provider
+    });
     app.MapFallbackToFile("index.html");
 }
 
