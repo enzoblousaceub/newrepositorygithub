@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -36,7 +36,8 @@ export class ProductFormComponent implements OnInit {
     private productService: ProductService,
     private route: ActivatedRoute,
     private router: Router,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -73,9 +74,12 @@ export class ProductFormComponent implements OnInit {
           minStock: product.minStock
         });
         this.loading = false;
+        this.cdr.markForCheck();
       },
       error: () => {
         this.snackBar.open('Produto não encontrado', 'Fechar', { duration: 3000 });
+        this.loading = false;
+        this.cdr.markForCheck();
         this.router.navigate(['/products']);
       }
     });
@@ -83,7 +87,10 @@ export class ProductFormComponent implements OnInit {
 
   loadCategories(): void {
     this.productService.getCategories().subscribe({
-      next: (categories) => this.categories = categories
+      next: (categories) => {
+        this.categories = categories;
+        this.cdr.markForCheck();
+      }
     });
   }
 
@@ -105,6 +112,7 @@ export class ProductFormComponent implements OnInit {
         error: () => {
           this.snackBar.open('Falha ao atualizar produto', 'Fechar', { duration: 3000 });
           this.loading = false;
+          this.cdr.markForCheck();
         }
       });
     } else {
@@ -116,6 +124,7 @@ export class ProductFormComponent implements OnInit {
         error: () => {
           this.snackBar.open('Falha ao criar produto', 'Fechar', { duration: 3000 });
           this.loading = false;
+          this.cdr.markForCheck();
         }
       });
     }

@@ -1,34 +1,32 @@
-# 📦 StockManager — Inventory Management System
+# 📦 Estoque Master — Sistema de Gestão de Estoque
 
-Welcome to **StockManager**, a professional AI-powered stock management platform designed to help businesses monitor, organize, and optimize their inventory operations.
+Bem-vindo ao **Estoque Master** (StockManager), uma plataforma moderna para monitoramento, organização e controle de estoque desenvolvida em **.NET** e **Angular**.
 
-This document provides a complete guide on how to set up, run, and use all the features of the application.
+Este documento fornece o guia completo de configuração, execução e arquitetura do projeto.
 
 ---
 
-## 🚀 Getting Started
+## 🚀 Como Começar
 
-### Prerequisites
+### Pré-requisitos
 
-Before you begin, ensure you have the following installed:
-*   **[.NET 10 SDK](https://dotnet.microsoft.com/download)** (Backend)
+Certifique-se de ter instalado:
+*   **[.NET SDK (versão 9 ou 10)](https://dotnet.microsoft.com/download)** (Backend)
 *   **[Node.js 18+](https://nodejs.org/)** (Frontend)
-*   **Angular CLI** (Optional, can be run via `npx`)
+*   **Angular CLI** (Opcional, pode ser executado via `npx`)
 
 ---
 
-## 🛠️ Installation & Setup
+## 🛠️ Instalação e Execução
 
-Follow these steps to get the project running locally:
-
-### 1. Clone the Repository
+### 1. Clonar o Repositório
 ```bash
-git clone <your-repo-url>
-cd projetoIntegrador
+git clone <url-do-repositorio>
+cd newrepositorygithub
 ```
 
-### 2. Set Up the Backend
-The backend uses **ASP.NET Core 10** and **SQLite**.
+### 2. Configurar e Executar o Backend
+O backend utiliza **ASP.NET Core** com **SQLite** e Entity Framework Core.
 ```bash
 cd backend
 dotnet restore
@@ -36,84 +34,77 @@ dotnet build
 dotnet run
 ```
 > [!IMPORTANT]
-> The backend is configured to run on **http://localhost:5005**.
-> On first run, it will automatically create the `data/stock.db` database and populate it with seed data.
+> O backend está configurado para rodar na porta **http://localhost:8080**.
+> Na primeira execução, o sistema cria automaticamente o banco `Data/stock.db` e o inicializa com dados de demonstração (seeding automático).
 
-### 3. Set Up the Frontend
-The frontend uses **Angular 19** with **Angular Material**.
+### 3. Configurar e Executar o Frontend
+O frontend utiliza **Angular 21** com **Angular Material** e modo **Zoneless**.
 ```bash
 cd ../frontend
 npm install
-npx ng serve
+npm start
 ```
 > [!NOTE]
-> The frontend will be available at **http://localhost:4200**.
+> A aplicação web estará disponível em **http://localhost:4200**.
+> As requisições para `/api` são automaticamente redirecionadas para `http://localhost:8080` através do `proxy.conf.json`.
 
 ---
 
-## 📖 User Tutorial: How to Use StockManager
+## 📖 Funcionalidades da Aplicação
 
-### 1. Dashboard (The Command Center)
-When you first open the app, you'll land on the **Dashboard**.
-*   **Stats Cards:** Instantly view your total product count, total items in stock, and the total monetary value of your inventory.
-*   **Alerts:** Keep an eye on "Low Stock" and "Out of Stock" cards. If these numbers are above zero, it's time to restock!
-*   **Quick Actions:** Use the buttons at the bottom to quickly jump to the product list or add a new item.
+### 1. Painel de Controle (Dashboard)
+Ao abrir a aplicação, a tela inicial exibe indicadores em tempo real:
+*   **Cards de Estatísticas:** Total de produtos cadastrados, quantidade total de itens em estoque e valor monetário total do patrimônio (em R$).
+*   **Alertas de Risco:** Monitoramento visual de itens em **Estoque Baixo** (abaixo do nível mínimo) e **Itens Esgotados** (estoque zerado).
+*   **Ações Rápidas:** Acesso direto para cadastrar novo produto ou visualizar a listagem completa.
 
-### 2. Managing Your Inventory
-Click on **"Products"** in the sidebar to see your full inventory.
-*   **Searching:** Use the search bar to find products by name or description.
-*   **Filtering:** Use the "Category" dropdown to see only specific types of items (e.g., Electronics, Furniture).
-*   **Sorting:** Click on any column header (Name, Category, Quantity, Price) to sort the list.
-*   **Status Badges:** Look at the "Status" column to see visual indicators:
-    *   🟢 **In Stock:** Good to go.
-    *   🟡 **Low Stock:** Approaching minimum levels.
-    *   🔴 **Out of Stock:** Item is completely sold out.
+### 2. Gestão de Produtos (Listagem)
+No menu lateral, acesse **"Produtos"**:
+*   **Busca:** Pesquise produtos pelo nome ou descrição em tempo real.
+*   **Filtro por Categoria:** Visualize itens específicos (ex.: Eletrônicos, Móveis, Acessórios, Escritório).
+*   **Ordenação e Paginação:** Ordene colunas clicando no cabeçalho e navegue por páginas.
+*   **Indicadores de Status:**
+    *   🟢 **Em Estoque:** Quantidade adequada.
+    *   🟡 **Estoque Baixo:** Quantidade menor ou igual ao estoque mínimo definido.
+    *   🔴 **Esgotado:** Quantidade zerada.
 
-### 3. Adding & Editing Products
-*   **Adding:** Click **"Add Product"** in the sidebar or the **"+"** button on the product list.
-*   **Editing:** Click the **Edit (pencil icon)** next to any product in the list.
-*   **Form Fields:**
-    *   **Min Stock Level:** This is crucial! Set this number to define when the system should warn you that stock is low.
-    *   **Price & Quantity:** Standard values for tracking your assets.
+### 3. Cadastro e Edição
+*   **Adicionar:** Clique em **"Novo Produto"** ou no ícone **"+"**.
+*   **Editar:** Clique no ícone de lápis em qualquer linha da tabela.
+*   **Preview Dinâmico:** Visualização prévia do card com imagem e preço em tempo real durante a digitação.
+*   **Campos de Validação:** Nome obrigatório, categoria, preço, quantidade e nível mínimo de estoque.
 
-### 4. Deleting Items
-*   To remove an item, click the **Delete (trash icon)**.
-*   A confirmation dialog will appear to prevent accidental deletions. **Warning:** This action cannot be undone.
+### 4. Exclusão com Confirmação
+*   Ao clicar no ícone de lixeira, um modal de confirmação previne exclusões acidentais.
 
 ---
 
-## 🏗️ Technical Architecture
+## 🏗️ Estrutura do Projeto
 
-### Project Structure
 ```txt
-projetoIntegrador/
+newrepositorygithub/
 ├── backend/                  # ASP.NET Core Web API
-│   ├── Controllers/          # API REST Endpoints
-│   ├── Data/                 # SQLite & Entity Framework Logic
-│   ├── Models/               # Data Entities
-│   └── appsettings.json      # Configuration (Port 5005)
-├── frontend/                 # Angular 19 SPA
-│   ├── src/app/pages/        # Dashboard, List, Form components
-│   └── src/app/services/     # API Integration logic
-└── data/                     # Database storage
-    └── stock.db              # SQLite Database file
+│   ├── Controllers/          # Endpoints REST (ProductsController)
+│   ├── Data/                 # AppDbContext e DbInitializer (Seed inicial)
+│   ├── DTOs/                 # Objetos de transferência de dados (Create/Update)
+│   ├── Models/               # Entidades de domínio (Product)
+│   ├── appsettings.json      # Configuração da aplicação (Porta 8080)
+│   └── backend.http          # Arquivo para testes de API via IDE
+├── frontend/                 # Aplicação Angular (SPA)
+│   ├── src/app/pages/        # Dashboard, Lista de Produtos e Formulário
+│   ├── src/app/components/   # Componentes compartilhados (Modal de confirmação)
+│   ├── src/app/services/     # Integração HTTP com a API
+│   └── proxy.conf.json       # Proxy reverso local para localhost:8080
+└── .github/workflows/        # Pipeline de CI/CD para deploy no Azure
 ```
 
 ---
 
-## 🧪 Troubleshooting
+## 🧪 Resolução de Problemas
 
-*   **Port Conflict:** If you get an error saying port 5005 or 4200 is in use, ensure you don't have another instance of the app running.
-*   **CORS Errors:** Ensure the backend is running on `http://localhost:5005`. The frontend is specifically configured to trust this origin.
-*   **Database Locked:** If the backend fails to start because the database is locked, ensure no other SQLite browser or application is accessing `data/stock.db`.
-
----
-
-## 📜 Coding Standards
-
-*   **Backend:** Follows **Clean Architecture** patterns and **SOLID** principles.
-*   **Frontend:** Uses **Standalone Components** (Angular 19) and **Material Design 3**.
-*   **Naming:** `camelCase` for variables/properties, `PascalCase` for classes/components.
+*   **Conflito de Porta:** Se a porta 8080 ou 4200 estiver em uso, encerre o processo anterior antes de reiniciar o serviço.
+*   **CORS / Comunicação:** O frontend está configurado para consumir `/api` via proxy reverso no desenvolvimento (`npm start`) e relativo em produção quando hospedado junto ao backend.
+*   **Banco de Dados:** O arquivo SQLite fica localizado em `backend/Data/stock.db`. Caso deseje resetar os dados, basta deletar o arquivo e iniciar o backend novamente.
 
 ---
-*Created with ❤️ for smarter inventory management.*
+*Estoque Master — Gestão inteligente e simplificada de inventário.*

@@ -46,7 +46,7 @@ namespace backend.Controllers
             var totalProducts = products.Count;
             var totalItems = products.Sum(p => p.Quantity);
             var totalValue = products.Sum(p => p.Quantity * p.Price);
-            var lowStockCount = products.Count(p => p.Quantity <= p.MinStock);
+            var lowStockCount = products.Count(p => p.Quantity > 0 && p.Quantity <= p.MinStock);
             var outOfStockCount = products.Count(p => p.Quantity == 0);
             var categories = products.Select(p => p.Category).Distinct().Count();
 

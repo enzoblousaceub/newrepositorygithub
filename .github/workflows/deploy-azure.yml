@@ -74,13 +74,9 @@ jobs:
             exit 1
           fi
       
-      - name: Copy SQLite
+      - name: Ensure Data directory
         run: |
           mkdir -p ./publish/backend/Data
-          if [ -f "./backend/Data/stock.db" ]; then
-            cp ./backend/Data/stock.db ./publish/backend/Data/
-            echo "✅ SQLite copiado"
-          fi
       
       - name: Deploy to Azure
         uses: azure/webapps-deploy@v2

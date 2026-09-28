@@ -26,10 +26,12 @@ builder.Services.AddCors(options =>
     });
 });
 
-// CRITICAL: Configure Kestrel for Azure
+// Configure Kestrel (respects PORT/ASPNETCORE_HTTP_PORTS environment variables or defaults to 8080)
+var portEnv = Environment.GetEnvironmentVariable("PORT") ?? Environment.GetEnvironmentVariable("ASPNETCORE_HTTP_PORTS");
+var listenPort = (!string.IsNullOrEmpty(portEnv) && int.TryParse(portEnv, out var p)) ? p : 8080;
 builder.WebHost.ConfigureKestrel(serverOptions =>
 {
-    serverOptions.ListenAnyIP(8080); // Azure expects port 8080
+    serverOptions.ListenAnyIP(listenPort);
 });
 
 var app = builder.Build();
@@ -72,11 +74,12 @@ else
     app.MapFallbackToFile("index.html");
 }
 
-// Ensure database is created
+// Ensure database is created and seeded
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     db.Database.EnsureCreated();
+    DbInitializer.Initialize(db);
 }
 
 app.Run();

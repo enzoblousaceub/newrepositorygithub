@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -46,7 +46,8 @@ export class ProductListComponent implements OnInit {
   constructor(
     private productService: ProductService,
     private snackBar: MatSnackBar,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -63,16 +64,21 @@ export class ProductListComponent implements OnInit {
     this.productService.getProducts(this.searchQuery, this.selectedCategory).subscribe({
       next: (products) => {
         this.dataSource.data = products;
+        this.cdr.markForCheck();
       },
       error: () => {
-        this.snackBar.open('Failed to load products', 'Close', { duration: 3000 });
+        this.snackBar.open('Falha ao carregar produtos', 'Fechar', { duration: 3000 });
+        this.cdr.markForCheck();
       }
     });
   }
 
   loadCategories(): void {
     this.productService.getCategories().subscribe({
-      next: (categories) => this.categories = categories
+      next: (categories) => {
+        this.categories = categories;
+        this.cdr.markForCheck();
+      }
     });
   }
 
@@ -97,9 +103,9 @@ export class ProductListComponent implements OnInit {
   }
 
   getStockLabel(product: Product): string {
-    if (product.quantity === 0) return 'Out of Stock';
-    if (product.quantity <= product.minStock) return 'Low Stock';
-    return 'In Stock';
+    if (product.quantity === 0) return 'Esgotado';
+    if (product.quantity <= product.minStock) return 'Estoque Baixo';
+    return 'Em Estoque';
   }
 
   confirmDelete(product: Product): void {
@@ -112,11 +118,12 @@ export class ProductListComponent implements OnInit {
       if (result) {
         this.productService.deleteProduct(product.id).subscribe({
           next: () => {
-            this.snackBar.open(`"${product.name}" deleted successfully`, 'Close', { duration: 3000 });
+            this.snackBar.open(`"${product.name}" excluído com sucesso`, 'Fechar', { duration: 3000 });
             this.loadProducts();
           },
           error: () => {
-            this.snackBar.open('Failed to delete product', 'Close', { duration: 3000 });
+            this.snackBar.open('Falha ao excluir produto', 'Fechar', { duration: 3000 });
+            this.cdr.markForCheck();
           }
         });
       }

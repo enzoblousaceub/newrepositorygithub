@@ -21,11 +21,11 @@ namespace backend.Data
                 
                 entity.Property(e => e.CreatedAt)
                     .HasConversion(v => v.ToString("yyyy-MM-dd HH:mm:ss"), 
-                                   v => DateTime.Parse(v));
+                                   v => DateTime.SpecifyKind(DateTime.Parse(v, System.Globalization.CultureInfo.InvariantCulture), DateTimeKind.Utc));
                 
                 entity.Property(e => e.UpdatedAt)
                     .HasConversion(v => v.ToString("yyyy-MM-dd HH:mm:ss"), 
-                                   v => DateTime.Parse(v));
+                                   v => DateTime.SpecifyKind(DateTime.Parse(v, System.Globalization.CultureInfo.InvariantCulture), DateTimeKind.Utc));
             });
         }
     }

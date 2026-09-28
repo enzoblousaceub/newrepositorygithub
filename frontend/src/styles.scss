@@ -75,9 +75,9 @@ a {
   color: inherit;
 }
 
-/* Smooth transitions globally */
-* {
-  transition-property: background-color, border-color, box-shadow, transform, opacity, filter;
-  transition-duration: 0.25s;
+/* Smooth transitions for interactive elements */
+a, button, mat-card, .stat-card, .table-row, .status-badge, .category-chip {
+  transition-property: background-color, border-color, box-shadow, transform, opacity;
+  transition-duration: 0.2s;
   transition-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1);
 }

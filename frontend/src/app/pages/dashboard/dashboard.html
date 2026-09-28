@@ -1,18 +1,18 @@
 <div class="dashboard-container">
   <div class="page-header">
-    <h1>Dashboard</h1>
-    <p class="subtitle">Overview of your inventory</p>
+    <h1>Painel de Controle</h1>
+    <p class="subtitle">Visão geral e indicadores em tempo real do seu estoque</p>
   </div>
 
-  <div class="stats-grid" *ngIf="stats && !loading">
+  <div class="stats-grid" *ngIf="stats() && !loading()">
     <mat-card class="stat-card total-products" id="stat-total-products">
       <mat-card-content>
         <div class="stat-icon">
           <mat-icon>inventory_2</mat-icon>
         </div>
         <div class="stat-info">
-          <span class="stat-value">{{ stats.totalProducts }}</span>
-          <span class="stat-label">Total Products</span>
+          <span class="stat-value">{{ stats()?.totalProducts }}</span>
+          <span class="stat-label">Total de Produtos</span>
         </div>
       </mat-card-content>
     </mat-card>
@@ -23,8 +23,8 @@
           <mat-icon>widgets</mat-icon>
         </div>
         <div class="stat-info">
-          <span class="stat-value">{{ stats.totalItems | number }}</span>
-          <span class="stat-label">Total Items in Stock</span>
+          <span class="stat-value">{{ stats()?.totalItems | number }}</span>
+          <span class="stat-label">Total de Itens em Estoque</span>
         </div>
       </mat-card-content>
     </mat-card>
@@ -35,8 +35,8 @@
           <mat-icon>attach_money</mat-icon>
         </div>
         <div class="stat-info">
-          <span class="stat-value">{{ stats.totalValue | currency:'USD':'symbol':'1.2-2' }}</span>
-          <span class="stat-label">Total Inventory Value</span>
+          <span class="stat-value">{{ stats()?.totalValue | currency:'BRL':'symbol':'1.2-2' }}</span>
+          <span class="stat-label">Valor Total do Estoque</span>
         </div>
       </mat-card-content>
     </mat-card>
@@ -47,8 +47,8 @@
           <mat-icon>category</mat-icon>
         </div>
         <div class="stat-info">
-          <span class="stat-value">{{ stats.categories }}</span>
-          <span class="stat-label">Categories</span>
+          <span class="stat-value">{{ stats()?.categories }}</span>
+          <span class="stat-label">Categorias</span>
         </div>
       </mat-card-content>
     </mat-card>
@@ -59,8 +59,8 @@
           <mat-icon>warning</mat-icon>
         </div>
         <div class="stat-info">
-          <span class="stat-value">{{ stats.lowStockCount }}</span>
-          <span class="stat-label">Low Stock Alerts</span>
+          <span class="stat-value">{{ stats()?.lowStockCount }}</span>
+          <span class="stat-label">Alerta: Estoque Baixo</span>
         </div>
       </mat-card-content>
     </mat-card>
@@ -71,28 +71,28 @@
           <mat-icon>error</mat-icon>
         </div>
         <div class="stat-info">
-          <span class="stat-value">{{ stats.outOfStockCount }}</span>
-          <span class="stat-label">Out of Stock</span>
+          <span class="stat-value">{{ stats()?.outOfStockCount }}</span>
+          <span class="stat-label">Alerta: Esgotados</span>
         </div>
       </mat-card-content>
     </mat-card>
   </div>
 
-  <div class="loading-container" *ngIf="loading">
+  <div class="loading-container" *ngIf="loading()">
     <mat-icon class="spin">sync</mat-icon>
-    <p>Loading dashboard...</p>
+    <p>Carregando indicadores...</p>
   </div>
 
   <div class="quick-actions">
-    <h2>Quick Actions</h2>
+    <h2>Ações Rápidas</h2>
     <div class="actions-grid">
       <a mat-raised-button color="primary" routerLink="/products/new" id="btn-add-product">
         <mat-icon>add</mat-icon>
-        Add New Product
+        Cadastrar Novo Produto
       </a>
       <a mat-stroked-button routerLink="/products" id="btn-view-products">
         <mat-icon>list</mat-icon>
-        View All Products
+        Ver Todos os Produtos
       </a>
     </div>
   </div>

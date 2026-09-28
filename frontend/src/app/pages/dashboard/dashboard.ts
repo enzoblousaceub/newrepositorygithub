@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
@@ -15,8 +15,8 @@ import { DashboardStats } from '../../models/product.model';
   styleUrl: './dashboard.scss'
 })
 export class DashboardComponent implements OnInit {
-  stats: DashboardStats | null = null;
-  loading = true;
+  stats = signal<DashboardStats | null>(null);
+  loading = signal<boolean>(true);
 
   constructor(private productService: ProductService) {}
 
@@ -25,14 +25,17 @@ export class DashboardComponent implements OnInit {
   }
 
   loadStats(): void {
-    this.loading = true;
+    console.log('DashboardComponent: loadStats called');
+    this.loading.set(true);
     this.productService.getStats().subscribe({
       next: (stats) => {
-        this.stats = stats;
-        this.loading = false;
+        console.log('DashboardComponent: stats received successfully', stats);
+        this.stats.set(stats);
+        this.loading.set(false);
       },
-      error: () => {
-        this.loading = false;
+      error: (err) => {
+        console.error('DashboardComponent: error receiving stats', err);
+        this.loading.set(false);
       }
     });
   }

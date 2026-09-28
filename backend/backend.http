@@ -1,6 +1,46 @@
-@backend_HostAddress = http://localhost:5062
+@backend_HostAddress = http://localhost:8080
 
-GET {{backend_HostAddress}}/weatherforecast/
+### Listar todos os produtos
+GET {{backend_HostAddress}}/api/products
 Accept: application/json
 
-###
+### Obter estatísticas do painel
+GET {{backend_HostAddress}}/api/products/stats
+Accept: application/json
+
+### Obter categorias
+GET {{backend_HostAddress}}/api/products/categories
+Accept: application/json
+
+### Obter produto por ID
+GET {{backend_HostAddress}}/api/products/1
+Accept: application/json
+
+### Criar novo produto
+POST {{backend_HostAddress}}/api/products
+Content-Type: application/json
+
+{
+  "name": "Mouse Gamer RGB",
+  "description": "Mouse óptico de alta precisão 12000 DPI",
+  "category": "Eletrônicos",
+  "quantity": 25,
+  "price": 149.90,
+  "minStock": 5
+}
+
+### Atualizar produto
+PUT {{backend_HostAddress}}/api/products/1
+Content-Type: application/json
+
+{
+  "name": "Mouse Sem Fio Ergonômico Pro",
+  "description": "Mouse óptico sem fio ergonômico atualizado",
+  "category": "Eletrônicos",
+  "quantity": 40,
+  "price": 99.90,
+  "minStock": 10
+}
+
+### Excluir produto
+DELETE {{backend_HostAddress}}/api/products/1
